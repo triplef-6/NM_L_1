@@ -21,11 +21,13 @@ public class Gen
          for(int i = 0 ; i < n; i++) {
             for(int j = 0; j < n; j++) {
                 //System.out.print( a[i][j] + " ");
-                if (a[i][j] > 0) {
-                    System.out.printf(" %f ", a[i][j]);
-                } else {
-                    System.out.printf("%f ", a[i][j]);
-                }
+                System.out.printf("%5.2f ", a[i][j]);
+
+//                if (a[i][j] > 0) {
+//                    System.out.printf(" %5.2f ", a[i][j]);
+//                } else {
+//                    System.out.printf("%5.2f ", a[i][j]);
+//                }
             }
             System.out.println();
         }
@@ -115,19 +117,20 @@ public class Gen
      * 1 2 1 1 простой структуры
      * 0 0 2 1 жордановы клетки
      */
-    public void mygen ( double[][] a, double[][] a_inv, int n, double alpha, double beta, int sign_law, int lambda_law, int variant, int schema )
+    public GenMatrixParam mygen ( double[][] a, double[][] a_inv, int n, double alpha, double beta, int sign_law, int lambda_law, int variant, int schema )
     {
         int i,j,k;
+        GenMatrixParam genMatrixParam = new GenMatrixParam();
 
-        System.out.println("   M A T R I X  G E N.  ");
-        System.out.println("              N = "+ n);
-        System.out.println(" | lambda_min | = "+alpha);
-        System.out.println(" | lambda_max | = "+beta);
+//        System.out.println("   M A T R I X  G E N.  ");
+//        System.out.println("              N = "+ n);
+//        System.out.println(" | lambda_min | = "+alpha);
+//        System.out.println(" | lambda_max | = "+beta);
 
     	double[] lambda = new double[n];
 
         // распределение знаков
-        System.out.println(" sign_law = "+sign_law);
+//        System.out.println(" sign_law = "+sign_law);
 
 	double[] sign   = new double[n];
         for( i=0; i<n; i++ ) sign[i] = 1.;
@@ -152,7 +155,7 @@ public class Gen
 */
 
         //распределение собственнных чисел
-        System.out.println(" lambda_law = "+lambda_law);
+//        System.out.println(" lambda_law = "+lambda_law);
 
 	double[] kappa   = new double[n];
         for( i=0; i<n; i++ ) kappa[i] = (double)i/(double)(n-1);
@@ -193,13 +196,13 @@ public class Gen
         double[] aa = new double[3];
 
 
-        System.out.println(" variant = "+variant);
+//        System.out.println(" variant = "+variant);
 
         switch( variant )
         {
             case 0: //симметричная матрица
-                System.out.println(" simmetric matrix:");
-                System.out.println(" schema = "+schema);
+//                System.out.println(" simmetric matrix:");
+//                System.out.println(" schema = "+schema);
                 switch( schema )
                 {
                     case 1:
@@ -243,8 +246,8 @@ public class Gen
                 break;
 
             case 1: //матрица простой структуры
-                System.out.println(" simple structure matrix:");
-                System.out.println(" schema = "+schema);
+//                System.out.println(" simple structure matrix:");
+//                System.out.println(" schema = "+schema);
                 switch( schema )
                 {
                     case 1:
@@ -332,8 +335,8 @@ public class Gen
                 break;
 
             case 2: //одна жорданова клетка 2x2 при минимальном с.з.
-                System.out.println(" J_2 type matrix: must be n > 2");
-                System.out.println(" schema = "+schema);
+//                System.out.println(" J_2 type matrix: must be n > 2");
+//                System.out.println(" schema = "+schema);
 
                 switch( schema )
                 {
@@ -447,14 +450,15 @@ public class Gen
         double norm,norm_inv;
 
         norm = matr_inf_norm ( a, n );
-        System.out.println(" ||  A  || = " + norm );
+        genMatrixParam.setA_norm(norm);
+//        System.out.println(" ||  A  || = " + norm );
 
         norm_inv = matr_inf_norm ( a_inv, n );
-        System.out.println(" ||A_inv|| = " + norm_inv );
-
+//        System.out.println(" ||A_inv|| = " + norm_inv );
+        genMatrixParam.setA_inv_norm(norm_inv);
         double obusl = norm*norm_inv;
-        System.out.println(" obusl = " + obusl );
-
+//        System.out.println(" obusl = " + obusl );
+        genMatrixParam.setObusl(obusl);
         //невязка генерации
 	double[][] r = new double [n][];
         for( i = 0; i < n; i++ )
@@ -470,9 +474,9 @@ public class Gen
 	}
 */
         norm = matr_inf_norm ( r, n );
-        System.out.println(" ||R_gen|| = " + norm );
+//        System.out.println(" ||R_gen|| = " + norm );
 
-
+    return genMatrixParam;
     }//mygen
 
 

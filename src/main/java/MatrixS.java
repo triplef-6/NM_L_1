@@ -1,6 +1,7 @@
 import static java.lang.Long.MIN_VALUE;
 
 public class MatrixS {
+    // сделать с одной матриц
     public static double[][] gauss(double[][] A, int n) {
         double[][] AE = addE(A, n);
 
