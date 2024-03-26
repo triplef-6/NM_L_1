@@ -1,17 +1,16 @@
 public class MAIN {
     public static void main(String[] args) {
-        int n = 10;
-        double[][] A = new double[n][n];
-        double[][] A_ = new double[n][n];
+        int n = 3;
+//        double[][] A = new double[n][n];
+//        double[][] A_g = new double[n][n];
+//        Gen g = new Gen();
+//        g.mygen(A, A_g, n, 1, 5, 1, 2, 1, 1,  false);
+//        g.print_matr(A, n);
+//        g.print_matr(A_g, n);
+//        double[][] A_ = Table.gauss(A, n);
+//        g.print_matr(A_, n);
 
-        Gen gen = new Gen();
-        gen.mygen(A, A_, n, 1, 2, 0, 0, 2, 1);
-//
-//        gen.print_matr(A_, n);
-//        gen.print_matr(MatrixS.gauss(A, n), n);
-        Table.printTable(n);
-
-
+        Table.printTableAlpha(n, 15);
 
 
 

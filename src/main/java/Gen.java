@@ -1,3 +1,5 @@
+import java.util.stream.IntStream;
+
 import static java.lang.Math.abs;
 
 /**
@@ -9,31 +11,20 @@ public class Gen
     public Gen() {
     }
 
-
     /**
      * показать матрицу
      * @param a матрица
      * @param n размер матрицы
      */
-    public void print_matr( double[][] a, int n )
-    {
-         System.out.println( " " );
-         for(int i = 0 ; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                //System.out.print( a[i][j] + " ");
+    public void print_matr(double[][] a, int n) {
+         System.out.println(" ");
+         for (int i = 0 ; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 System.out.printf("%5.2f ", a[i][j]);
-
-//                if (a[i][j] > 0) {
-//                    System.out.printf(" %5.2f ", a[i][j]);
-//                } else {
-//                    System.out.printf("%5.2f ", a[i][j]);
-//                }
             }
             System.out.println();
         }
-
     }
-
 
     /**
      * кубическая норма матрицы
@@ -41,66 +32,68 @@ public class Gen
      * @param n размер матрицы
      * @return норма
      */
-    public double matr_inf_norm ( double[][] a, int n){
+    public double matr_inf_norm(double[][] a, int n) {
+        double norm = 0.;
 
-        int i,j;
-        double s,norm = 0.;
-
-        for( i = 0; i < n; i++ )
-        {
-            for( s = 0., j = 0; j < n; j++ ) s += Math.abs( a[i][j] );
-            if( s > norm ) norm = s;
+        for (int i = 0; i < n; i++) {
+            double s = 0.;
+            for (int j = 0; j < n; j++) {
+                s += Math.abs( a[i][j] );
+            }
+            if (s > norm) {
+                norm = s;
+            }
         }
 
         return norm;
     }
 
-
     /**
      * умножение матриц
      * @param a матрица 1
      * @param b матрица 2
-     * @param c результат
      * @param n размер матрицы
+     * @return произведение матриц
      */
-    public void matr_mul( double[][] a,  double[][] b,  double[][] c, int n )
-    {
-        int i,j,k;
-
-        for( i = 0; i < n; i++ )
-            for( j = 0; j < n; j++ )
-                for( c[i][j]=0., k=0; k<n; k++ ) c[i][j] += a[i][k]*b[k][j];
-
+    public double[][] matr_mul(double[][] a,  double[][] b, int n) {
+        double[][] c = new double[n][n];
+        for(int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int k = 0;
+                for (c[i][j] = 0.; k < n; k++) {
+                    c[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return c;
     }
-
 
     /**
      * ?поиск ортогональной матрицы
      * @param Q
      * @param n
-     * @param schema
      */
-    public void Q_matrix ( double[][] Q, int n, int schema )
-    {
-        int i,j;
+    public void Q_matrix(double[][] Q, int n) {
         double  q;
 
         double curr, next = 1.;
-        for( j=0; j<n-1; j++ )
-        {
+        for (int j=0; j<n-1; j++) {
             curr = next;
             next += 1.;
-
-            q = 1./Math.sqrt(curr*next );
-            for( i=0; i<=j; i++ ) Q[i][j] = q;
-            Q[j+1][j] =-Math.sqrt( curr/next );
-            for( i=j+2; i<n; i++ ) Q[i][j] = 0.;
+            q = 1. / Math.sqrt(curr * next);
+            for (int i = 0; i <= j; i++) {
+                Q[i][j] = q;
+            }
+            Q[j+1][j] = -Math.sqrt(curr / next);
+            for(int i = j + 2; i < n; i++) {
+                Q[i][j] = 0.;
+            }
         }
-
-        q = 1./Math.sqrt( (double)n );
-        for( i=0; i<n; i++ ) Q[i][n-1] = q;
+        q = 1. / Math.sqrt(n);
+        for (int i = 0; i < n; i++) {
+            Q[i][n - 1] = q;
+        }
     }
-
 
     /**
      * генератор матриц
@@ -117,8 +110,7 @@ public class Gen
      * 1 2 1 1 простой структуры
      * 0 0 2 1 жордановы клетки
      */
-    public GenMatrixParam mygen ( double[][] a, double[][] a_inv, int n, double alpha, double beta, int sign_law, int lambda_law, int variant, int schema )
-    {
+    public GenMatrixParam mygen(double[][] a, double[][] a_inv, int n, double alpha, double beta, int sign_law, int lambda_law, int variant, int schema, boolean print_flag) {
         int i,j,k;
         GenMatrixParam genMatrixParam = new GenMatrixParam();
 
@@ -127,12 +119,12 @@ public class Gen
 //        System.out.println(" | lambda_min | = "+alpha);
 //        System.out.println(" | lambda_max | = "+beta);
 
-    	double[] lambda = new double[n];
+        double[] lambda = new double[n];
 
         // распределение знаков
 //        System.out.println(" sign_law = "+sign_law);
 
-	double[] sign   = new double[n];
+        double[] sign   = new double[n];
         for( i=0; i<n; i++ ) sign[i] = 1.;
 
         switch(sign_law)
@@ -157,7 +149,7 @@ public class Gen
         //распределение собственнных чисел
 //        System.out.println(" lambda_law = "+lambda_law);
 
-	double[] kappa   = new double[n];
+        double[] kappa   = new double[n];
         for( i=0; i<n; i++ ) kappa[i] = (double)i/(double)(n-1);
         switch(lambda_law)
         {
@@ -181,16 +173,16 @@ public class Gen
 */
 
 
-	double[] J = new double[n];
+        double[] J = new double[n];
         for( i=0; i<n; i++ ) J[i] = sign[i]*( ( 1.-kappa[i] )*alpha + kappa[i]*beta );
 /*	for( i=0; i<n; i++ ) cout<<J[i]<<" ";
 	cout<<endl;
 */
 
-	double[] J_inv = new double[n];
+        double[] J_inv = new double[n];
         for( i=0; i<n; i++ ) J_inv[i] = 1./J[i];
 
-	double[][] Q = new double [n][];
+        double[][] Q = new double [n][];
         for( i=0; i<n; i++ ) Q[i] = new double [n];
 
         double[] aa = new double[3];
@@ -206,7 +198,7 @@ public class Gen
                 switch( schema )
                 {
                     case 1:
-                        Q_matrix ( Q, n, schema );
+                        Q_matrix ( Q, n);
 
                         for( a[0][0]=0., k=0; k<n; k++ ) a[0][0] += Q[0][k]*J[k]*Q[0][k];
                         for( j=1; j<n; j++ )
@@ -460,23 +452,14 @@ public class Gen
 //        System.out.println(" obusl = " + obusl );
         genMatrixParam.setObusl(obusl);
         //невязка генерации
-	double[][] r = new double [n][];
-        for( i = 0; i < n; i++ )
-            r[i] = new double [n];
-        matr_mul ( a, a_inv, r, n );
+        double[][] r = matr_mul ( a, a_inv, n );
+
         for( i = 0; i < n; i++ ) r[i][i] -= 1.;
 
-/*	cout << "r:" << endl;
-	for( i = 0; i < n; i++ )
-	{
-		for( j = 0; j < n; j++ ) cout << " " << r[i][j];
-		cout << endl;
-	}
-*/
         norm = matr_inf_norm ( r, n );
 //        System.out.println(" ||R_gen|| = " + norm );
 
-    return genMatrixParam;
+        return genMatrixParam;
     }//mygen
 
 
